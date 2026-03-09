@@ -1,16 +1,45 @@
-@use '../../scss/common';
-@use '../../scss/message';
-@use '../../scss/data';
+._data-list {
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+  background: radial-gradient(circle at top, #111 0%, #000 70%);
+  border: 2px solid #ffe81f;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255, 232, 31, 0.4);
+  font-family: 'Orbitron', sans-serif;
 
-:host {
-  @include common.layout-block();
+  li {
+    margin: 10px 0;
+
+    a {
+      display: block;
+      padding: 10px 15px;
+      color: #ffe81f;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 1px;
+      border-left: 4px solid transparent;
+      transition: all 0.25s ease;
+
+      &:hover {
+        background: rgba(255, 232, 31, 0.08);
+        border-left: 4px solid #00eaff; // light saber vibe
+        color: #fff;
+        text-shadow: 0 0 8px #ffe81f;
+        transform: translateX(5px);
+      }
+    }
+  }
 }
 
 ._empty-message {
-  @include message.layout-message();
-  color: #FFE81F;
-}
-
-._data-list {
-  @include data.layout-data-list();
+  text-align: center;
+  padding: 30px;
+  color: #ffe81f;
+  font-size: 1.2rem;
+  font-family: 'Orbitron', sans-serif;
+  background: radial-gradient(circle, #111 0%, #000 80%);
+  border: 2px dashed #ffe81f;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 232, 31, 0.3);
 }

@@ -1,16 +1,57 @@
-@use '../../scss/common';
-@use '../../scss/message';
-@use '../../scss/data';
-
-:host {
-  @include common.layout-block();
-}
-
-._empty-message {
-  @include message.layout-message();
-  color: #FFE81F;
-}
-
 ._data-list {
-  @include data.layout-data-list();
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+
+  background: radial-gradient(circle at center, #000 45%, #020a20 100%);
+  border: 2px solid #ffe81f;
+  border-radius: 10px;
+
+  font-family: "Orbitron", sans-serif;
+
+  box-shadow: 0 0 20px rgba(255, 232, 31, 0.35);
+}
+
+/* list spacing */
+._data-list li {
+  margin: 10px 0;
+}
+
+/* link style */
+._data-list a {
+  display: block;
+  padding: 10px 16px;
+
+  color: #ffe81f;
+  text-decoration: none;
+  letter-spacing: 1px;
+
+  border-left: 4px solid transparent;
+  transition: all 0.25s ease;
+}
+
+/* hover = lightsaber glow */
+._data-list a:hover {
+  background: rgba(255, 232, 31, 0.08);
+  border-left: 4px solid #4bd5ff;
+
+  color: #ffffff;
+  text-shadow: 0 0 8px #ffe81f;
+
+  transform: translateX(6px);
+}
+
+/* empty message */
+._empty-message {
+  text-align: center;
+  padding: 30px;
+
+  color: #ffe81f;
+  font-size: 1.2rem;
+
+  background: #000;
+  border: 2px dashed #ffe81f;
+  border-radius: 10px;
+
+  font-family: "Orbitron", sans-serif;
 }
