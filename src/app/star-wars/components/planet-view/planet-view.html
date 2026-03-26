@@ -1,37 +1,54 @@
-<link
-  href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap"
-  rel="stylesheet"
-/>
 <hr />
 <dl class="_data-view">
   <dt>Name</dt>
   <dd>
     <a
-      href="https://www.google.com/search?q={{ data().name }}+Star+Wars"
+      [href]="data().name | searchUrl"
       target="_blank"
       rel="noopener noreferrer"
-      class="app-cmp-link"
-      >{{ data().name }}
-      <i class="material-symbols-outlined" style="font-size: 1em; vertical-align: middle"
-        >open_in_new</i
-      ></a
+      class="app-cmp-link app-cl-external"
+      >{{ data().name }}</a
     >
   </dd>
 
   <dt>Diameter</dt>
-  <dd>{{ data().diameter }} km</dd>
+  <dd>
+    @if (data().diameter | isNumber) {
+      <span class="app-cl-number _number-data">{{ data().diameter | number }}</span> km
+    } @else {
+      {{ data().diameter }}
+    }
+  </dd>
 
   <dt>Rotation Period</dt>
-  <dd>{{ data().rotation_period }} hr</dd>
+  <dd>
+    @if (data().rotation_period | isNumber) {
+      <span class="app-cl-number _number-data">{{ data().rotation_period | number }}</span> hr
+    } @else {
+      {{ data().orbital_period }}
+    }
+  </dd>
 
   <dt>Orbital Period</dt>
-  <dd>{{ data().orbital_period }} days</dd>
+  <dd>
+    @if (data().orbital_period | isNumber) {
+      <span class="app-cl-number _number-data">{{ data().orbital_period | number }}</span> days
+    } @else {
+      {{ data().orbital_period }}
+    }
+  </dd>
 
   <dt>Gravity</dt>
   <dd>{{ data().gravity }}</dd>
 
   <dt>Population</dt>
-  <dd>{{ data().population }}</dd>
+  <dd>
+    @if (data().population | isNumber) {
+      <span class="app-cl-number _number-data">{{ data().population | number }}</span>
+    } @else {
+      {{ data().population }}
+    }
+  </dd>
 
   <dt>Climate</dt>
   <dd>{{ data().climate }}</dd>
@@ -40,24 +57,33 @@
   <dd>{{ data().terrain }}</dd>
 
   <dt>Surface Water</dt>
-  <dd>{{ data().surface_water }} %</dd>
+  <dd>
+    @if (data().surface_water | isNumber) {
+      <span class="app-cl-number _number-data">{{ data().surface_water | number }}</span> %
+    } @else {
+      {{ data().surface_water }}
+    }
+  </dd>
 
   <dt>Residents</dt>
   <dd>
     <ul>
-      @for (resident$ of asyncData().residents; track resident$) {
-        @if (resident$ | async; as resident) {
-          <li>
+      @for (fieldTree of form.residents; track fieldTree) {
+        @let resouce = fieldTree().metadata(residentResourceKey)!;
+        <li>
+          @if (resouce.hasValue()) {
             <a
-              [routerLink]="['people', resident.url | extractId]"
+              [routerLink]="['people', resouce.value().url | extractId]"
               [relativeTo]="moduleRoute()"
               class="app-cmp-link"
-              >{{ resident.name }}</a
+              >{{ resouce.value().name }}</a
             >
-          </li>
-        } @else {
-          <li><span class="_status-loading">Loading</span></li>
-        }
+          } @else if (resouce.error(); as error) {
+            <span class="_status-warning">{{ error.message }}</span>
+          } @else if (resouce.isLoading()) {
+            <span class="_status-loading">Loading</span>
+          }
+        </li>
       }
     </ul>
   </dd>
@@ -65,19 +91,22 @@
   <dt>Films</dt>
   <dd>
     <ul>
-      @for (film$ of asyncData().films; track film$) {
-        @if (film$ | async; as film) {
-          <li>
+      @for (fieldTree of form.films; track fieldTree) {
+        @let resource = fieldTree().metadata(filmResourceKey)!;
+        <li>
+          @if (resource.hasValue()) {
             <a
-              [routerLink]="['films', film.url | extractId]"
+              [routerLink]="['films', resource.value().url | extractId]"
               [relativeTo]="moduleRoute()"
               class="app-cmp-link"
-              >{{ film.title }}</a
+              >{{ resource.value().title }}</a
             >
-          </li>
-        } @else {
-          <li><span class="_status-loading">Loading</span></li>
-        }
+          } @else if (resource.error(); as error) {
+            <span class="_status-warning">{{ error.message }}</span>
+          } @else if (resource.isLoading()) {
+            <span class="_status-loading">Loading</span>
+          }
+        </li>
       }
     </ul>
   </dd>

@@ -1,34 +1,30 @@
-<div class="_opening-crawl-container">
-  <div class="_crawl-fade-top"></div>
-  <div class="_crawl-scene">
-    <div class="_crawl-text">
-      <p class="_crawl-intro">A long time ago in a galaxy far,<br />far away....</p>
-      <div class="_crawl-body">
-        <h2 class="_crawl-episode">EPISODE {{ data().episode_id }}</h2>
-        <h1 class="_crawl-title">{{ data().title }}</h1>
-        <p>{{ data().opening_crawl }}</p>
-      </div>
-    </div>
-  </div>
-</div>
+<app-opening-crawl
+  [episode]="data().episode_id"
+  [title]="data().title"
+  [crawl]="data().opening_crawl"
+  class="_crawl"
+/>
 
 <hr />
 <dl class="_data-view">
   <dt>Title</dt>
   <dd>
     <a
-      href="https://www.google.com/search?q={{ data().title }}+Star+Wars"
+      [href]="data().title | searchUrl"
       target="_blank"
       rel="noopener noreferrer"
-      class="app-cmp-link"
-    >{{ data().title }} <i class="material-symbols-outlined" style="font-size:1em;vertical-align:middle">open_in_new</i></a>
+      class="app-cmp-link app-cl-external"
+      >{{ data().title }}</a
+    >
   </dd>
 
   <dt>Episode ID</dt>
-  <dd>{{ data().episode_id }}</dd>
+  <dd>
+    <span class="app-cl-number">{{ data().episode_id | number }}</span>
+  </dd>
 
   <dt>Opening Crawl</dt>
-  <dd class="_opening-crawl">{{ data().opening_crawl }}</dd>
+  <dd>{{ data().opening_crawl }}</dd>
 
   <dt>Director</dt>
   <dd>{{ data().director }}</dd>
@@ -42,19 +38,23 @@
   <dt>Characters</dt>
   <dd>
     <ul>
-      @for (character$ of asyncData().characters; track character$) {
-        @if (character$ | async; as character) {
-          <li>
+      @for (fieldTree of form.characters; track fieldTree) {
+        @let resouce = fieldTree().metadata(characterResourceKey)!;
+
+        <li>
+          @if (resouce.hasValue()) {
             <a
-              [routerLink]="['people', character.url | extractId]"
+              [routerLink]="['people', resouce.value().url | extractId]"
               [relativeTo]="moduleRoute()"
               class="app-cmp-link"
-              >{{ character.name }}</a
+              >{{ resouce.value().name }}</a
             >
-          </li>
-        } @else {
-          <li><span class="_status-loading">Loading</span></li>
-        }
+          } @else if (resouce.error(); as error) {
+            <span class="_status-warning">{{ error.message }}</span>
+          } @else if (resouce.isLoading()) {
+            <span class="_status-loading">Loading</span>
+          }
+        </li>
       }
     </ul>
   </dd>
@@ -62,19 +62,23 @@
   <dt>Planets</dt>
   <dd>
     <ul>
-      @for (planet$ of asyncData().planets; track planet$) {
-        @if (planet$ | async; as planet) {
-          <li>
+      @for (fieldTree of form.planets; track fieldTree) {
+        @let resouce = fieldTree().metadata(planetResourceKey)!;
+
+        <li>
+          @if (resouce.hasValue()) {
             <a
-              [routerLink]="['planets', planet.url | extractId]"
+              [routerLink]="['planets', resouce.value().url | extractId]"
               [relativeTo]="moduleRoute()"
               class="app-cmp-link"
-              >{{ planet.name }}</a
+              >{{ resouce.value().name }}</a
             >
-          </li>
-        } @else {
-          <li><span class="_status-loading">Loading</span></li>
-        }
+          } @else if (resouce.error(); as error) {
+            <span class="_status-warning">{{ error.message }}</span>
+          } @else if (resouce.isLoading()) {
+            <span class="_status-loading">Loading</span>
+          }
+        </li>
       }
     </ul>
   </dd>
